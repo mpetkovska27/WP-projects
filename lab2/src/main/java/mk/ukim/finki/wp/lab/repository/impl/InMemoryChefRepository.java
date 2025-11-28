@@ -30,9 +30,30 @@ public class InMemoryChefRepository implements ChefRepository {
 
     @Override
     public Chef save(Chef chef) {
-        //ako vekje postoi chef vo listata so isto id, izbrishigo prvo pa zacuvaj go novoto
-        DataHolder.chefs.removeIf(s->s.getId().equals(chef.getId()));
+        Optional najden=findById(chef.getId());
+        if(najden.isPresent()){
+
+            Chef update= (Chef) najden.get();
+            update.setFirstName(chef.getFirstName());
+            update.setLastName(chef.getLastName());
+            update.setBio(chef.getBio());
+            update.setGender(chef.getGender());
+            return update;
+        }
+        //AKO NE POSTOI DODAJ NOV
         DataHolder.chefs.add(chef);
         return chef;
     }
+
+    @Override
+    public void deleteById(Long id) {
+        for(Chef deletedChef:DataHolder.chefs){
+            if(deletedChef.getId().equals(id)){
+                DataHolder.chefs.remove(deletedChef);
+                break;
+            }
+        }
+    }
 }
+
+

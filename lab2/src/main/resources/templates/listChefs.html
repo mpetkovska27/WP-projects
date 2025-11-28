@@ -19,30 +19,28 @@
     <h1>Welcome to Our Restaurant</h1>
 </header>
 <main>
+    <div class="add-button">
+        <form method="get" action="/chefs/chef-form">
+            <input type="submit" value="Add Chef">
+        </form>
+    </div>
     <h2>Choose a chef:</h2>
-    <form action="/dish" method="POST">
-        <!-- Display radio buttons for each chef,
-             the value should be the chef id
-             and the displayed text should be:
-             Name: <firstName> <lastName>, Bio: <bio> -->
+    <form action="/chefs" method="POST">
 
-<!--        <div th:each="chef : ${chefs}">-->
-<!--        <input type="radio"-->
-<!--               name="chefId"-->
-<!--               th:value="${chef.id}"-->
-<!--                th:text="| ${chef.firstName} ${chef.lastName} |">-->
-<!--        <br/>-->
-<!--        </div>-->
-
-        <th:block th:each="chef: ${chefs}">
+        <div th:each="chef : ${chefs}">
             <input type="radio"
                    name="chefId"
                    th:value="${chef.id}"
-                   th:text="|${chef.firstName} ${chef.lastName}|">
-            <br/>
-        </th:block>
+                   th:text="| Name: ${chef.firstName} ${chef.lastName}, Bio: ${chef.bio} |">
+            <a th:href="@{/chefs/chef-form/{id} (id=${chef.id})}">EDIT CHEF</a>
+            <a th:href="@{/chefs/delete/{id} (id=${chef.id})}">DELETE CHEF</a>
+
+        </div>
+
         <input type="submit" value="Submit">
     </form>
+
+
 </main>
 </body>
 </html>

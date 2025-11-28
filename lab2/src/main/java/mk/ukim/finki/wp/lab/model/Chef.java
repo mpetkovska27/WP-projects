@@ -13,4 +13,18 @@ public class Chef {
     private String lastName;
     private String bio;
     private List<Dish> dishes;
+    private Gender gender;
+
+
+    public enum Gender{
+        NOTDEFINED, MAN, FEMALE
+    }
+
+    public Chef(String firstName, String lastName, String bio, Gender gender) {
+        this.id=(long) (Math.random() * 1000);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bio = bio;
+        this.gender = gender;
+    }
 }

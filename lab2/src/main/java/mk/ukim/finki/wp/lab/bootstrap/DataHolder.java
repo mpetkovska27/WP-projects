@@ -29,11 +29,11 @@ public class DataHolder {
         dishes.add(dish4);
         dishes.add(dish5);
 
-        Chef chef1 = new Chef(1L, "Ana", "Anovska", "Bio na Ana", new ArrayList<>());
-        Chef chef2 = new Chef(2L, "Marija", "Markovska", "Bio na Marija", new ArrayList<>());
-        Chef chef3 = new Chef(3L, "Mihaela", "Mihajlovska", "Bio na Mihaela", new ArrayList<>());
-        Chef chef4 = new Chef(4L, "Marko", "Markov", "Bio na Marko", new ArrayList<>());
-        Chef chef5 = new Chef(5L, "Matej", "Petkov", "Bio na Matej", new ArrayList<>());
+        Chef chef1 = new Chef(1L, "Ana", "Anovska", "Bio na Ana", new ArrayList<>(), Chef.Gender.FEMALE);
+        Chef chef2 = new Chef(2L, "Marija", "Markovska", "Bio na Marija", new ArrayList<>(), Chef.Gender.FEMALE);
+        Chef chef3 = new Chef(3L, "Mihaela", "Mihajlovska", "Bio na Mihaela", new ArrayList<>(), Chef.Gender.FEMALE);
+        Chef chef4 = new Chef(4L, "Marko", "Markov", "Bio na Marko", new ArrayList<>(), Chef.Gender.MAN);
+        Chef chef5 = new Chef(5L, "Matej", "Petkov", "Bio na Matej", new ArrayList<>(), Chef.Gender.MAN);
 
         chefs.add(chef1);
         chefs.add(chef2);

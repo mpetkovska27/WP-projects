@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form>
+
+</form>
+
+
+<!--ako e povikano za ADD na edna patek,a ako e povikano za EDIT na dr pateka-->
+<!--    <form method="post" th:action="${dish == null} ? @{/dishes/add} : @{/dishes/edit/{id} (id = ${dish.id})"> -->
+<form method="post"
+      th:action="${chef == null} ? '/chefs/add' : '/chefs/edit/' + ${chef.id}">
+
+    <label>Name: </label>
+    <input type="text" name="firstName" th:value="${chef?.firstName}"/>
+    <br/>
+
+    <label>Last Name: </label>
+    <input type="text" name="lastName" th:value="${chef?.lastName}"/>
+    <br/>
+
+    <label>Bio: </label>
+    <input type="text" name="bio" th:value="${chef?.bio}"/>
+    <br/>
+
+    <div>
+        <label for="gender">Gender</label><br/>
+        <select id="gender" name="gender" required>
+            <option value="" th:text="'Select Gender'">Select Gender</option>
+
+            <!-- Iterating through enum values -->
+            <option th:each="gender : ${genders}"
+                    th:value="${gender}"
+                    th:text="${gender}"
+                    th:selected="${gender == chef?.gender}"></option>
+        </select>
+    </div>
+
+
+    <input type="submit" value="Submit"/>
+</form>
+</body>
+</html>

@@ -1,31 +1,48 @@
 package mk.ukim.finki.wp.lab.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+@Entity
+@Table(name = "chefs")
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class Chef {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String firstName;
     private String lastName;
     private String bio;
-    private List<Dish> dishes;
-    private Gender gender;
 
+    @OneToMany(mappedBy = "chef")
+    private List<Dish> dishes;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     public enum Gender{
         NOTDEFINED, MAN, FEMALE
     }
 
     public Chef(String firstName, String lastName, String bio, Gender gender) {
-        this.id=(long) (Math.random() * 1000);
         this.firstName = firstName;
         this.lastName = lastName;
         this.bio = bio;
         this.gender = gender;
-
+        this.dishes = new ArrayList<>();
     }
 }

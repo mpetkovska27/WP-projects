@@ -1,5 +1,4 @@
 package mk.ukim.finki.wp.lab.service.impl;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +10,6 @@ import mk.ukim.finki.wp.lab.model.Dish;
 import mk.ukim.finki.wp.lab.repository.ChefRepository;
 import mk.ukim.finki.wp.lab.repository.DishRepository;
 import mk.ukim.finki.wp.lab.service.ChefService;
-
 
 
 @Service
@@ -28,7 +26,6 @@ public class ChefServiceImpl implements ChefService {
 
     @Override
     public Chef findById(Long id) {
-
         Optional chefOptional=chefRepository.findById(id);
         if(chefOptional.isPresent()){
             return (Chef) chefOptional.get();
@@ -45,10 +42,14 @@ public class ChefServiceImpl implements ChefService {
 
     @Override
     public Chef update(Long id, String firstName, String lastName, String bio, Chef.Gender gender) {
-        Chef updatedChef=new Chef(firstName,lastName,bio,gender);
-        updatedChef.setId(id);
-        chefRepository.save(updatedChef);
-        return updatedChef;
+        Chef chef = chefRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chef not found with id: " + id));
+
+        chef.setFirstName(firstName);
+        chef.setLastName(lastName);
+        chef.setBio(bio);
+        chef.setGender(gender);
+        return chefRepository.save(chef);
     }
 
     @Override
@@ -59,8 +60,17 @@ public class ChefServiceImpl implements ChefService {
     @Override
     public Chef addDishToChef(Long chefId, String dishId) {
         Chef chef=findById(chefId);
+        if (chef == null) {
+            throw new RuntimeException("Chef not found with id: " + chefId);
+        }
         Dish dish=dishRepository.findByDishId(dishId);
+        if (dish == null) {
+            throw new RuntimeException("Dish not found with dishId: " + dishId);
+        }
+        dish.setChef(chef);
         chef.getDishes().add(dish);
+
+        dishRepository.save(dish);
         return chefRepository.save(chef);
     }
 }

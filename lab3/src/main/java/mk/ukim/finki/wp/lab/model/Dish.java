@@ -1,22 +1,28 @@
 package mk.ukim.finki.wp.lab.model;
 
-import lombok.Data;
-
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+@Entity
+@Table(name = "dishes")
 @Data
+@NoArgsConstructor
 public class Dish {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String dishId;
     private String name;
     private String cuisine;
     private int preparationTime;
 
+    @ManyToOne
+    @JoinColumn(name = "chef_id")
+    private Chef chef;
+
     public Dish(String dishId, String name, String cuisine, int preparationTime) {
-        this.id = (long) (Math.random() * 10000);
         this.dishId = dishId;
         this.name = name;
         this.cuisine = cuisine;

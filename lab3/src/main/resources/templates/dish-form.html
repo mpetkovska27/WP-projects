@@ -39,6 +39,17 @@
                min="1"
                required>
     </div>
+    <div>
+        <label for="chefId">Chef:</label>
+        <select id="chefId" name="chefId">
+            <option value="">-- Select Chef--</option>
+            <option th:each="chef : ${chefs}"
+                    th:value="${chef.id}"
+                    th:text="${chef.firstName + ' ' + chef.lastName}"
+                    th:selected="${dish != null && dish.chef != null && dish.chef.id == chef.id}">
+            </option>
+        </select>
+    </div>
     <button id="submit" type="submit">Submit</button>
     <a id="back" href="/dishes" type="button" class="btn btn-primary">Back to Dishes</a>
 </form>

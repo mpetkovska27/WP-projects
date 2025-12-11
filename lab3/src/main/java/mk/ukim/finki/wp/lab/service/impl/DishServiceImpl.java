@@ -17,13 +17,11 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public List<Dish> listDishes() {
-
         return dishRepository.findAll();
     }
 
     @Override
     public Dish findByDishId(String dishId) {
-
         return dishRepository.findByDishId(dishId);
     }
 
@@ -40,14 +38,25 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public Dish update(Long id, String dishId, String name, String cuisine, int preparationTime) {
-        Dish dish=new Dish(dishId,name,cuisine,preparationTime);
-        dish.setId(id);     //se setira id-to
-        dishRepository.save(dish);
-        return dish;
+        Dish dish = dishRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dish not found with id: " + id));
+
+        dish.setDishId(dishId);
+        dish.setName(name);
+        dish.setCuisine(cuisine);
+        dish.setPreparationTime(preparationTime);
+        return dishRepository.save(dish);
     }
 
     @Override
     public void delete(Long id) {
         dishRepository.deleteById(id);
     }
+
+    @Override
+    public List<Dish> findAllByChef_Id(Long chefId) {
+        return dishRepository.findAllByChef_Id(chefId);
+    }
+
+
 }

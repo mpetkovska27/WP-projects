@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.lab.web.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -23,18 +24,26 @@ public class DishController {
         this.dishService = dishService;
         this.chefService = chefService;
     }
+
     @GetMapping("/dishes")
     public String getDishesPage(@RequestParam(required = false) String error, Model model){
         List<Dish> dishes = dishService.listDishes();
-        model.addAttribute("dishes",dishes);
+        model.addAttribute("dishes", dishes);
         return "listDishes";
     }
+
     @PostMapping("/dishes/add")
-    public String saveDish(@RequestParam String dishId, @RequestParam String name, @RequestParam String cuisine, @RequestParam int preparationTime,  @RequestParam(required = false) Long chefId){
+    public String saveDish(@RequestParam String dishId,
+                           @RequestParam String name,
+                           @RequestParam Dish.Cuisine cuisine,
+                           @RequestParam int preparationTime,
+                           @RequestParam String preparationDate,
+                           @RequestParam(required = false) Long chefId) {
         try {
-            Dish dish = dishService.create(dishId, name, cuisine, preparationTime);
-            //ako ima selektirano chef, da mu se dodeli toj dish na toj chef
-            if(chefId != null) {
+            LocalDate date = LocalDate.parse(preparationDate);
+            Dish dish = dishService.create(dishId, name, cuisine, preparationTime, date);
+
+            if (chefId != null) {
                 chefService.addDishToChef(chefId, dish.getDishId());
             }
             return "redirect:/dishes";
@@ -42,11 +51,20 @@ public class DishController {
             return "redirect:/dishes?error=" + e.getMessage();
         }
     }
+
     @PostMapping("/dishes/edit/{id}")
-    public String editDish(@PathVariable Long id, @RequestParam String dishId, @RequestParam String name, @RequestParam String cuisine, @RequestParam int preparationTime, @RequestParam(required = false) Long chefId){
+    public String editDish(@PathVariable Long id,
+                           @RequestParam String dishId,
+                           @RequestParam String name,
+                           @RequestParam Dish.Cuisine cuisine,
+                           @RequestParam int preparationTime,
+                           @RequestParam String preparationDate,
+                           @RequestParam(required = false) Long chefId) {
         try {
-            dishService.update(id, dishId, name, cuisine, preparationTime);
-            if(chefId != null) {
+            LocalDate date = LocalDate.parse(preparationDate);
+            dishService.update(id, dishId, name, cuisine, preparationTime, date);
+
+            if (chefId != null) {
                 Dish dish = dishService.findByDishId(dishId);
                 if (dish != null) {
                     chefService.addDishToChef(chefId, dishId);
@@ -57,6 +75,7 @@ public class DishController {
             return "redirect:/dishes?error=" + e.getMessage();
         }
     }
+
     @PostMapping("/dishes/delete/{id}")
     public String deleteDish(@PathVariable Long id){
         try {
@@ -66,23 +85,30 @@ public class DishController {
             return "redirect:/dishes?error=" + e.getMessage();
         }
     }
+
     @GetMapping("/dishes/dish-form/{id}")
     public String getEditDishForm(@PathVariable Long id, Model model){
-            Dish dish = dishService.findById(id);
+        Dish dish = dishService.findById(id);
+        if (dish != null) {
             model.addAttribute("dish", dish);
+            model.addAttribute("cuisines", Dish.Cuisine.values());
             List<Chef> chefs = chefService.listChefs();
             model.addAttribute("chefs", chefs);
             return "dish-form";
+        } else {
+            model.addAttribute("error", "Dish not found!");
+            return "redirect:/dishes";
+        }
     }
 
     @GetMapping("/dishes/dish-form")
     public String getAddDishPage(Model model){
+        model.addAttribute("cuisines", Dish.Cuisine.values());
         List<Chef> chefs = chefService.listChefs();
         model.addAttribute("chefs", chefs);
         return "dish-form";
     }
 
-    //integracija so chef
     @PostMapping(value = "/chefDetails")
     public String addDishToChef(
             @RequestParam Long chefId,

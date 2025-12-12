@@ -9,6 +9,8 @@ import mk.ukim.finki.wp.lab.model.Dish;
 import mk.ukim.finki.wp.lab.repository.ChefRepository;
 import mk.ukim.finki.wp.lab.repository.DishRepository;
 
+import java.time.LocalDate;
+
 @Component
 @RequiredArgsConstructor
 public class DataHolder {/*
@@ -21,11 +23,11 @@ public class DataHolder {/*
     @PostConstruct
     public void init() {
         if (dishRepository.count() == 0) {
-            Dish dish1 = new Dish("1", "Pasta Carbonara", "Italian", 20);
-            Dish dish2 = new Dish("2", "Beef Wellington", "British", 45);
-            Dish dish3 = new Dish("3", "Chicken Tikka Masala", "Indian", 35);
-            Dish dish4 = new Dish("4", "Sushi Roll", "Japanese", 25);
-            Dish dish5 = new Dish("5", "Chocolate Cake", "Dessert", 50);
+            Dish dish1 = new Dish("1", "Pasta Carbonara", Dish.Cuisine.ITALIAN, 20, LocalDate.now());
+            Dish dish2 = new Dish("2", "Beef Wellington", Dish.Cuisine.BRITISH, 45, LocalDate.now());
+            Dish dish3 = new Dish("3", "Chicken Tikka Masala", Dish.Cuisine.MEXICAN, 35, LocalDate.now());
+            Dish dish4 = new Dish("4", "Sushi Roll", Dish.Cuisine.ITALIAN, 25, LocalDate.now());
+            Dish dish5 = new Dish("5", "Chocolate Cake", Dish.Cuisine.BRITISH, 50, LocalDate.now());
 
             dishRepository.save(dish1);
             dishRepository.save(dish2);

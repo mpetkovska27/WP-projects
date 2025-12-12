@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.lab.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -32,12 +33,12 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public Dish create(String dishId, String name, String cuisine, int preparationTime) {
-        return dishRepository.save(new Dish(dishId, name, cuisine, preparationTime));
+    public Dish create(String dishId, String name, Dish.Cuisine cuisine, int preparationTime, LocalDate preparationDate) {
+        return dishRepository.save(new Dish(dishId, name, cuisine, preparationTime, preparationDate));
     }
 
     @Override
-    public Dish update(Long id, String dishId, String name, String cuisine, int preparationTime) {
+    public Dish update(Long id, String dishId, String name, Dish.Cuisine cuisine, int preparationTime, LocalDate preparationDate) {
         Dish dish = dishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Dish not found with id: " + id));
 
@@ -45,6 +46,7 @@ public class DishServiceImpl implements DishService {
         dish.setName(name);
         dish.setCuisine(cuisine);
         dish.setPreparationTime(preparationTime);
+        dish.setPreparationDate(preparationDate);
         return dishRepository.save(dish);
     }
 

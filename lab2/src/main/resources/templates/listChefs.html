@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Restaurant Chefs - Welcome to Our Restaurant</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to Our Restaurant</h1>
+</header>
+<main>
+    <div class="add-button">
+        <form method="get" action="/chefs/chef-form">
+            <input type="submit" value="Add Chef">
+        </form>
+    </div>
+    <h2>Choose a chef:</h2>
+    <form action="/chefs" method="POST">
+
+        <div th:each="chef : ${chefs}">
+            <input type="radio"
+                   name="chefId"
+                   th:value="${chef.id}"
+                   th:text="| Name: ${chef.firstName} ${chef.lastName}, Bio: ${chef.bio} |">
+            <a th:href="@{/chefs/chef-form/{id} (id=${chef.id})}">EDIT CHEF</a>
+            <a th:href="@{/chefs/delete/{id} (id=${chef.id})}">DELETE CHEF</a>
+
+        </div>
+
+        <input type="submit" value="Submit">
+    </form>
+
+
+</main>
+</body>
+</html>

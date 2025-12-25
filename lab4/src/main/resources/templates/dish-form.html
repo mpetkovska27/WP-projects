@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dish Form</title>
+</head>
+<body>
+<div th:with="action=${dish != null && dish.id != null ? '/dishes/edit/' + dish.id : '/dishes/add'}">
+    <form method="post" th:action="@{${action}}">
+        <div>
+            <label for="dishId">Dish ID</label>
+            <input type="text"
+                   id="dishId"
+                   name="dishId"
+                   th:value="${dish != null ? dish.dishId : ''}"
+                   required>
+        </div>
+
+        <div>
+            <label for="name">Name</label>
+            <input type="text"
+                   id="name"
+                   name="name"
+                   th:value="${dish != null ? dish.name : ''}"
+                   required>
+        </div>
+
+        <div>
+            <label for="cuisine">Cuisine</label><br/>
+            <select id="cuisine" name="cuisine" required>
+                <option value="" th:text="'Select Cuisine'">Select Cuisine</option>
+
+                <option th:each="cuisine : ${cuisines}"
+                        th:value="${cuisine}"
+                        th:text="${cuisine}"
+                        th:selected="${cuisine == dish?.cuisine}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label for="preparationTime">Preparation Time</label>
+            <input type="number"
+                   id="preparationTime"
+                   name="preparationTime"
+                   th:value="${dish != null ? dish.preparationTime : ''}"
+                   min="1"
+                   required>
+        </div>
+
+        <div>
+            <label for="preparationDate">Preparation Date</label>
+            <input type="date"
+                   id="preparationDate"
+                   name="preparationDate"
+                   th:value="${dish != null && dish.preparationDate != null ? dish.preparationDate : ''}"
+                   required>
+        </div>
+
+        <div>
+            <label for="chefIds">Chefs:</label><br/>
+            <select id="chefIds" name="chefIds" multiple size="5">
+                <option th:each="chef : ${chefs}"
+                        th:value="${chef.id}"
+                        th:text="${chef.firstName + ' ' + chef.lastName}"
+                        th:selected="${dish != null && dish.chefs != null && dish.chefs.contains(chef)}"></option>            </select>
+        </div>
+
+        <button id="submit" type="submit">Submit</button>
+        <a id="back" href="/dishes" type="button" class="btn btn-primary">Back to Dishes</a>
+    </form>
+</div>
+</body>
+</html>

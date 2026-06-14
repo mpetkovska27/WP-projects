@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Archaeological Site List</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method ArchaeologicalSiteController.listAll -->
+    <form id="filter-form" method="GET" action="/">
+        <label for="name">Site Name</label>
+        <input id="name" type="text" name="name"/>
+
+        <label for="areaSize">Site Area Size (in square meters)</label>
+        <input id="areaSize" type="number" name="areaSize"/>
+
+        <label for="rating">Rating</label>
+        <input id="rating" type="number" step="0.1" min="0" max="10" name="rating"/>
+
+        <label for="period">Historical Period</label>
+        <select id="period" name="period">
+            <option value="">All</option>
+            <!-- For each HistoricalPeriod you should have one <option> like below  -->
+            <option th:each="period :${periodes}" th:text="${period}" th:value="${period}">[historicalPeriod]</option>
+        </select>
+
+        <label for="location">SiteLocation</label>
+        <select id="location" name="locationId">
+            <option value="">All</option>
+            <!-- For each location you should have one <option> like below  -->
+            <option th:each="location : ${siteLocations}" th:text="|${location.city}, ${location.country}|" th:value="${location.id}">[location.city] , [location.country]</option>
+        </select>
+<!--za koga imame povishe vo edno se stavaat so || za da gi dava edno do drugo-->
+        <button id="filter" type="submit">Filter</button>
+    </form>
+
+    <div>
+        <!-- ArchaeologicalSiteController.showAdd -->
+        <a class="add-item" href="archaeological-sites/add"
+        sec:authorize="hasRole('ADMIN')">Add new archaeological site</a>
+    </div>
+
+    <table>
+        <tr>
+            <th>Site Name</th>
+            <th>Area Size</th>
+            <th>Rating</th>
+            <th>Historical Period</th>
+            <th>SiteLocation</th>
+            <th>Open/Closed</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each archaeological site you should have one <tr> like below -->
+<!--        bez getContent nema da gi zeme podatocite za site sites-->
+        <tr class="item" th:each="site : ${sites.getContent()}">
+            <td th:text="${site.name}">[site.name]</td>
+            <td th:text="${site.areaSize}">[site.areaSize]</td>
+            <td th:text="${site.rating}">[site.rating]</td>
+            <td th:text="${site.period}">[site.period]</td>
+            <td th:text="|${site.location.city}, ${site.location.country}|">[site.location.city], [site.location.country]</td>
+            <td th:text="${site.closed} ? 'CLOSED' : 'OPEN'">[site.closed] -> OPEN/CLOSED</td>
+            <td>
+                <!-- ArchaeologicalSiteController.edit -->
+<!--                za edit kaj id treba od site da go zeme te od objektot-->
+                <a class="edit-item" th:href="@{'/archaeological-sites/edit/{id}'(id=${site.getId()})}"
+                   sec:authorize="hasRole('ADMIN')">Edit</a>
+
+                <!-- ArchaeologicalSiteController.delete -->
+                <form th:action="@{'/archaeological-sites/delete/{id}' (id=${site.getId()}) }"
+                    th:method="post"
+                      sec:authorize="hasRole('ADMIN')">
+                    <button type="submit" class="delete-item">Delete</button>
+                </form>
+
+                <!-- ArchaeologicalSiteController.close -->
+                <form th:if="${!site.closed}" th:action="@{'/archaeological-sites/close/{id}' (id=${site.getId()}) }"
+                      th:method="post"
+                      sec:authorize="hasRole('ADMIN')">
+                    <button type="submit" class="close-item">Close</button>
+                </form>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

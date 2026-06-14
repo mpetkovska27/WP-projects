@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Archaeological Site Form</title>
+</head>
+<body>
+<!-- The form should submit to ArchaeologicalSiteController.create or ArchaeologicalSiteController.update,
+     depending on whether we are creating or editing an archaeological site -->
+<!--ako toUpdate sto mi e promenliva od update metoda vo controller zavisi za edit i create-->
+<form th:method="post" th:action="${toUpdate == null} ? @{/archaeological-sites} : @{/archaeological-sites/{id}(id=${toUpdate.getId()})} ">
+    <div>
+        <label for="name">Site Name</label>
+        <input type="text"
+               id="name"
+               name="name"
+               th:value="${toUpdate?.name}"
+               required>
+    </div>
+    <!--ako imame toUpdate go zema od nego direkt -->
+    <!-- ova se koristi pri CREATE koga pravish nolv objekt da znaae DEKA toa shto kje go vnesesh e za PARAMTEROT NAME od noviot objekt --->
+    <div>
+        <label for="areaSize">Site Area Size (in square meters)</label>
+        <input type="number"
+               id="areaSize"
+               name="areaSize"
+               th:value="${toUpdate?.areaSize}"
+               required>
+    </div>
+
+    <div>
+        <label for="rating">Site Rating</label><br/>
+        <input type="number"
+               id="rating"
+               name="rating"
+               th:value="${toUpdate?.rating}"
+               step="0.1"
+               min="0"
+               max="10"
+               required>
+    </div>
+
+    <div>
+        <label for="period">Historical Period</label><br/>
+        <select id="period" name="period" size="5" required>
+            <!-- For each HistoricalPeriod you should have one <option> like below  -->
+            <option th:each="period : ${periodes}" th:text="${period}" th:value="${period}"
+            th:selected="${period} == ${toUpdate?.period}"> <!-- direkt kje bide selektirano tuka toa od riste-->
+            [historicalPeriod]</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="location">SiteLocation</label><br/>
+        <select id="location" name="locationId" required size="5">
+            <!-- For each location you should have one <option> like below  -->
+            <option th:each="location : ${siteLocations}" th:text="|${location.city}, ${location.country}|" th:value="${location.id}"
+                    th:selected="${location.id} == ${toUpdate?.location?.id}">[location.city] , [location.country]</option>
+        </select>
+    </div>
+
+    <button id="submit" type="submit">Submit</button>
+    <a id="back" href="/archaeological-sites" type="button" class="btn btn-primary">Back to Archaeological Sites</a>
+</form>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>
